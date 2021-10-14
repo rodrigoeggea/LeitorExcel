@@ -15,13 +15,11 @@ import java.util.List;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -47,7 +45,6 @@ public class LeitorExcel {
 		this.caminhoArquivo = caminhoArquivo;
 		this.extensao = getExtensionByStringHandling(caminhoArquivo.toString());
 		this.arquivo = Files.newInputStream(caminhoArquivo, StandardOpenOption.READ);
-		System.out.println("EXTENSION= " + extensao);
 		
 		// Abre o arquivo
 		abrir();
@@ -151,7 +148,6 @@ public class LeitorExcel {
 	}
 	
 	/* ********************* LISTAR PLANILHAS **************************/
-	
 	/**
 	 * Retorna nome de todas as planilhas.
 	 * @return
@@ -175,11 +171,6 @@ public class LeitorExcel {
 		}
 	}
 	
-	public Boolean getValorCelulaBoolean(String coluna, int linha) throws Exception {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return getValorCelulaBoolean(colunaNumero, linha);
-	}
-	
 	public Boolean getValorCelulaBoolean(String celula) throws Exception {
 		int coluna = CellRangeAddress.valueOf(celula).getFirstColumn()+1;
 		int linha  = CellRangeAddress.valueOf(celula).getFirstRow()+1;
@@ -195,11 +186,6 @@ public class LeitorExcel {
 		} catch (IllegalStateException ie) {
 			throw new Exception("O valor da célula não é numérico! Erro: " + ie.getMessage());
 		}
-	}
-	
-	public Double getValorCelulaDouble(String coluna, int linha) throws Exception {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return getValorCelulaDouble(colunaNumero, linha);
 	}
 	
 	public Double getValorCelulaDouble(String celula) throws Exception {
@@ -219,40 +205,13 @@ public class LeitorExcel {
 		}
 	}
 	
-	public String getValorCelulaString(String coluna, int linha) throws Exception {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return getValorCelulaString(colunaNumero, linha);
-	}
-	
 	public String getValorCelulaString(String celula) throws Exception {
 		int coluna = CellRangeAddress.valueOf(celula).getFirstColumn()+1;
 		int linha  = CellRangeAddress.valueOf(celula).getFirstRow()+1;
 		return getValorCelulaString(coluna, linha);
 	}
 	
-	/* ********************** GET DATE ******************************/
-	
-	public Date  getValorCelulaDate(int coluna, int linha) throws Exception {
-		verificaLimitesIndex(coluna, linha);
-		try {
-			return getCell(coluna, linha).getDateCellValue();
-		} catch (IllegalStateException ie) {
-			throw new Exception("O valor da célula não é do tipo data! Erro: " + ie.getMessage());
-		}
-	}
-
-	public Date getValorCelulaDate(String coluna, int linha) throws Exception {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return getValorCelulaDate(colunaNumero, linha);
-	}
-	
-	public Date getValorCelulaDate(String celula) throws Exception {
-		int coluna = CellRangeAddress.valueOf(celula).getFirstColumn()+1;
-		int linha  = CellRangeAddress.valueOf(celula).getFirstRow()+1;
-		return getValorCelulaDate(coluna, linha);
-	}
-	
-	/* ********************** GET LOCAL DATE ******************************/
+	/* ********************** GET LOCAL DATE TIME ******************************/
 	
 	public LocalDateTime  getValorCelulaLocalDateTime(int coluna, int linha) throws Exception {
 		verificaLimitesIndex(coluna, linha);
@@ -263,18 +222,36 @@ public class LeitorExcel {
 		}
 	}
 
-	public LocalDateTime getValorCelulaLocalDateTime(String coluna, int linha) throws Exception {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return getValorCelulaLocalDateTime(colunaNumero, linha);
-	}
-	
 	public LocalDateTime getValorCelulaLocalDateTime(String celula) throws Exception {
 		int coluna = CellRangeAddress.valueOf(celula).getFirstColumn()+1;
 		int linha  = CellRangeAddress.valueOf(celula).getFirstRow()+1;
 		return getValorCelulaLocalDateTime(coluna, linha);
 	}
 
-	/* ********************** GET VALORES DE UMA COLUNA ******************************/
+	/* ********************** GET BOOLEAN DE UMA COLUNA ******************************/
+	public List<Boolean> getValoresColunaBoolean(int colunaInicio, int linhaInicio, int linhaFim) throws Exception {
+		verificaLimitesIndex(colunaInicio, linhaInicio);
+		verificaLimitesIndex(colunaInicio, linhaFim);
+		List<Boolean> valores = new ArrayList<>();
+		
+		for(int linha=linhaInicio; linha<=linhaFim; linha++) {
+			valores.add(getValorCelulaBoolean(colunaInicio, linha));
+		}
+		return valores;
+	}
+	
+	public List<Boolean> getValoresColunaBoolean(String celulaInicioFim) throws Exception {
+		int colunaInicio = CellRangeAddress.valueOf(celulaInicioFim).getFirstColumn()+1;
+		int linhaInicio  = CellRangeAddress.valueOf(celulaInicioFim).getFirstRow()+1;
+		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
+		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
+		if(colunaInicio != colunaFim) {
+			throw new RuntimeException("Coluna inicial e final deve ser a mesma.");
+		}
+		return getValoresColunaBoolean(colunaInicio, linhaInicio, linhaFim); 
+	}
+	
+	/* ********************** GET DOUBLE DE UMA COLUNA ******************************/
 	public List<Double> getValoresColunaDouble(int colunaInicio, int linhaInicio, int linhaFim) throws Exception {
 		verificaLimitesIndex(colunaInicio, linhaInicio);
 		verificaLimitesIndex(colunaInicio, linhaFim);
@@ -284,17 +261,6 @@ public class LeitorExcel {
 			valores.add(getValorCelulaDouble(colunaInicio, linha));
 		}
 		return valores;
-	}
-	
-	public List<Double> getValoresColunaDouble(String celulaInicio, String celulaFim) throws Exception {
-		int colunaInicio = CellRangeAddress.valueOf(celulaInicio).getFirstColumn()+1;
-		int linhaInicio  = CellRangeAddress.valueOf(celulaInicio).getFirstRow()+1;
-		int colunaFim    = CellRangeAddress.valueOf(celulaFim).getFirstColumn()+1;
-		int linhaFim     = CellRangeAddress.valueOf(celulaFim).getFirstRow()+1;
-		if(colunaInicio != colunaFim) {
-			throw new RuntimeException("Coluna inicial e final deve ser a mesma.");
-		}
-		return getValoresColunaDouble(colunaInicio, linhaInicio, linhaFim); 
 	}
 	
 	public List<Double> getValoresColunaDouble(String celulaInicioFim) throws Exception {
@@ -308,7 +274,76 @@ public class LeitorExcel {
 		return getValoresColunaDouble(colunaInicio, linhaInicio, linhaFim); 
 	}
 	
-	/* ********************** GET VALORES DE UMA LINHA ******************************/
+	/* ********************** GET STRING DE UMA COLUNA ******************************/
+	public List<String> getValoresColunaString(int colunaInicio, int linhaInicio, int linhaFim) throws Exception {
+		verificaLimitesIndex(colunaInicio, linhaInicio);
+		verificaLimitesIndex(colunaInicio, linhaFim);
+		List<String> valores = new ArrayList<>();
+		
+		for(int linha=linhaInicio; linha<=linhaFim; linha++) {
+			valores.add(getValorCelulaString(colunaInicio, linha));
+		}
+		return valores;
+	}
+	
+	public List<String> getValoresColunaString(String celulaInicioFim) throws Exception {
+		int colunaInicio = CellRangeAddress.valueOf(celulaInicioFim).getFirstColumn()+1;
+		int linhaInicio  = CellRangeAddress.valueOf(celulaInicioFim).getFirstRow()+1;
+		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
+		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
+		if(colunaInicio != colunaFim) {
+			throw new RuntimeException("Coluna inicial e final deve ser a mesma.");
+		}
+		return getValoresColunaString(colunaInicio, linhaInicio, linhaFim); 
+	}
+	
+	/* ********************** GET DATETIME DE UMA COLUNA ******************************/
+	public List<LocalDateTime> getValoresColunaLocalDateTime(int colunaInicio, int linhaInicio, int linhaFim) throws Exception {
+		verificaLimitesIndex(colunaInicio, linhaInicio);
+		verificaLimitesIndex(colunaInicio, linhaFim);
+		List<LocalDateTime> valores = new ArrayList<>();
+		
+		for(int linha=linhaInicio; linha<=linhaFim; linha++) {
+			valores.add(getValorCelulaLocalDateTime(colunaInicio, linha));
+		}
+		return valores;
+	}
+	
+	public List<LocalDateTime> getValoresColunaLocalDateTime(String celulaInicioFim) throws Exception {
+		int colunaInicio = CellRangeAddress.valueOf(celulaInicioFim).getFirstColumn()+1;
+		int linhaInicio  = CellRangeAddress.valueOf(celulaInicioFim).getFirstRow()+1;
+		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
+		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
+		if(colunaInicio != colunaFim) {
+			throw new RuntimeException("Coluna inicial e final deve ser a mesma.");
+		}
+		return getValoresColunaLocalDateTime(colunaInicio, linhaInicio, linhaFim); 
+	}
+	
+	/* ********************** GET BOOLEAN DE UMA LINHA ******************************/
+	public List<Boolean> getValoresLinhaBoolean(int colunaInicio, int colunaFim, int linhaFixa) throws Exception {
+		verificaLimitesIndex(colunaInicio, linhaFixa);
+		verificaLimitesIndex(colunaFim, linhaFixa);
+		List<Boolean> valores = new ArrayList<>();
+		
+		for(int coluna=colunaInicio; coluna<=colunaFim; coluna++) {
+			valores.add(getValorCelulaBoolean(coluna, linhaFixa));
+		}
+		return valores;
+	}
+	
+	public List<Boolean> getValoresLinhaBoolean(String celulaInicioFim) throws Exception {
+		int colunaInicio = CellRangeAddress.valueOf(celulaInicioFim).getFirstColumn()+1;
+		int linhaInicio  = CellRangeAddress.valueOf(celulaInicioFim).getFirstRow()+1;
+		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
+		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
+		if(linhaInicio != linhaFim) {
+			throw new RuntimeException("Linha inicial e final deve ser a mesma.");
+		}
+		return getValoresLinhaBoolean(colunaInicio, colunaFim, linhaFim); 
+	}
+	
+	/* ********************** GET DOUBLE DE UMA LINHA ******************************/
 	public List<Double> getValoresLinhaDouble(int colunaInicio, int colunaFim, int linhaFixa) throws Exception {
 		verificaLimitesIndex(colunaInicio, linhaFixa);
 		verificaLimitesIndex(colunaFim, linhaFixa);
@@ -318,17 +353,6 @@ public class LeitorExcel {
 			valores.add(getValorCelulaDouble(coluna, linhaFixa));
 		}
 		return valores;
-	}
-	
-	public List<Double> getValoresLinhaDouble(String celulaInicio, String celulaFim) throws Exception {
-		int colunaInicio = CellRangeAddress.valueOf(celulaInicio).getFirstColumn()+1;
-		int linhaInicio  = CellRangeAddress.valueOf(celulaInicio).getFirstRow()+1;
-		int colunaFim    = CellRangeAddress.valueOf(celulaFim).getFirstColumn()+1;
-		int linhaFim     = CellRangeAddress.valueOf(celulaFim).getFirstRow()+1;
-		if(linhaInicio != linhaFim) {
-			throw new RuntimeException("Linha inicial e final deve ser a mesma.");
-		}
-		return getValoresLinhaDouble(colunaInicio, colunaFim, linhaFim); 
 	}
 	
 	public List<Double> getValoresLinhaDouble(String celulaInicioFim) throws Exception {
@@ -342,28 +366,66 @@ public class LeitorExcel {
 		return getValoresLinhaDouble(colunaInicio, colunaFim, linhaFim); 
 	}
 	
+	/* ********************** GET STRING DE UMA LINHA ******************************/
+	public List<String> getValoresLinhaString(int colunaInicio, int colunaFim, int linhaFixa) throws Exception {
+		verificaLimitesIndex(colunaInicio, linhaFixa);
+		verificaLimitesIndex(colunaFim, linhaFixa);
+		List<String> valores = new ArrayList<>();
+		
+		for(int coluna=colunaInicio; coluna<=colunaFim; coluna++) {
+			valores.add(getValorCelulaString(coluna, linhaFixa));
+		}
+		return valores;
+	}
+	
+	public List<String> getValoresLinhaString(String celulaInicioFim) throws Exception {
+		int colunaInicio = CellRangeAddress.valueOf(celulaInicioFim).getFirstColumn()+1;
+		int linhaInicio  = CellRangeAddress.valueOf(celulaInicioFim).getFirstRow()+1;
+		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
+		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
+		if(linhaInicio != linhaFim) {
+			throw new RuntimeException("Linha inicial e final deve ser a mesma.");
+		}
+		return getValoresLinhaString(colunaInicio, colunaFim, linhaFim); 
+	}
+	
+	/* ********************** GET LOCAL DATE TIME DE UMA LINHA ******************************/
+	public List<LocalDateTime> getValoresLinhaLocalDateTime(int colunaInicio, int colunaFim, int linhaFixa) throws Exception {
+		verificaLimitesIndex(colunaInicio, linhaFixa);
+		verificaLimitesIndex(colunaFim, linhaFixa);
+		List<LocalDateTime> valores = new ArrayList<>();
+		
+		for(int coluna=colunaInicio; coluna<=colunaFim; coluna++) {
+			valores.add(getValorCelulaLocalDateTime(coluna, linhaFixa));
+		}
+		return valores;
+	}
+	
+	public List<LocalDateTime> getValoresLinhaLocalDateTime(String celulaInicioFim) throws Exception {
+		int colunaInicio = CellRangeAddress.valueOf(celulaInicioFim).getFirstColumn()+1;
+		int linhaInicio  = CellRangeAddress.valueOf(celulaInicioFim).getFirstRow()+1;
+		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
+		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
+		if(linhaInicio != linhaFim) {
+			throw new RuntimeException("Linha inicial e final deve ser a mesma.");
+		}
+		return getValoresLinhaLocalDateTime(colunaInicio, colunaFim, linhaFim); 
+	}
+	
 	/* ********************** GET DOUBLE RANGE ******************************/
-	public Double[][] getValorRangeDouble(int colunaFixa, int linhaInicio, int colunaFim, int linhaFim) throws Exception {
-		verificaLimitesIndex(colunaFixa, linhaInicio);
+	public Double[][] getValorRangeDouble(int colunaInicio, int linhaInicio, int colunaFim, int linhaFim) throws Exception {
+		verificaLimitesIndex(colunaInicio, linhaInicio);
 		verificaLimitesIndex(colunaFim, linhaFim);
 
-		int numeroColunas = colunaFim - colunaFixa +1;
+		int numeroColunas = colunaFim - colunaInicio +1;
 		int numeroLinhas = linhaFim - linhaInicio +1;
 		Double[][] valores = new Double[numeroColunas][numeroLinhas];
-		for(int coluna=colunaFixa, i=0; coluna <= colunaFim; coluna++, i++) {
+		for(int coluna=colunaInicio, i=0; coluna <= colunaFim; coluna++, i++) {
 			for(int linha=linhaInicio, j=0; linha <= linhaFim; linha++, j++) {
 				valores[i][j]=getValorCelulaDouble(coluna, linha);
 			}
 		}
 		return valores;
-	}
-	
-	public Double[][] getValorRangeDouble(String celulaInicio, String celulaFim) throws Exception {
-		int colunaInicio = CellRangeAddress.valueOf(celulaInicio).getFirstColumn()+1;
-		int linhaInicio  = CellRangeAddress.valueOf(celulaInicio).getFirstRow()+1;
-		int colunaFim    = CellRangeAddress.valueOf(celulaFim).getFirstColumn()+1;
-		int linhaFim     = CellRangeAddress.valueOf(celulaFim).getFirstRow()+1;
-		return getValorRangeDouble(colunaInicio, linhaInicio, colunaFim, linhaFim); 
 	}
 	
 	public Double[][] getValorRangeDouble(String celulaInicioFim) throws Exception {
@@ -389,17 +451,11 @@ public class LeitorExcel {
 		return cell;
 	}
 	
-	public Cell setValorCelulaBoolean(String coluna, int linha, Boolean valor) {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return setValorCelulaBoolean(colunaNumero, linha, valor);
-	}
-	
 	public Cell setValorCelulaBoolean(String celula, Boolean valor) throws Exception {
 		int coluna = CellRangeAddress.valueOf(celula).getFirstColumn()+1;
 		int linha  = CellRangeAddress.valueOf(celula).getFirstRow()+1;
 		return setValorCelulaBoolean(coluna, linha, valor);
 	}
-	
 	
 	/* ******************** SET DOUBLE ******************************/
 
@@ -415,11 +471,6 @@ public class LeitorExcel {
 
 		cell.setCellValue(valor);
 		return cell;
-	}
-	
-	public Cell setValorCelulaDouble(String coluna, int linha, Double valor) {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return setValorCelulaDouble(colunaNumero, linha, valor);
 	}
 	
 	public Cell setValorCelulaDouble(String celula, Double valor) throws Exception {
@@ -441,11 +492,6 @@ public class LeitorExcel {
 		}
 		cell.setCellValue(valor);
 		return cell;
-	}
-	
-	public Cell setValorCelulaString(String coluna, int linha, String valor) {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return setValorCelulaString(colunaNumero, linha, valor);
 	}
 	
 	public Cell setValorCelulaString(String celula, String valor) throws Exception {
@@ -473,11 +519,6 @@ public class LeitorExcel {
 		int coluna = CellRangeAddress.valueOf(celula).getFirstColumn()+1;
 		int linha  = CellRangeAddress.valueOf(celula).getFirstRow()+1;
 		return setValorCelulaDate(coluna, linha, valor);
-	}
-	
-	public Cell setValorCelulaDate(String coluna, int linha, Date valor) {
-		int colunaNumero = CellReference.convertColStringToIndex(coluna)+1;
-		return setValorCelulaDate(colunaNumero, linha, valor);
 	}
 	
 	/* ****************** METODOS AUXILIARES ************************/
@@ -524,5 +565,5 @@ public class LeitorExcel {
 		}
 		return sb.toString();
 	}
-	
 }
+
