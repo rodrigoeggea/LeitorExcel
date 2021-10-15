@@ -14,30 +14,45 @@ public class Main {
 		LeitorExcel leitor = new LeitorExcel(is, EXTENSAO.XLSX);
 		leitor.abrir(0);
 		
+		// Le uma string
+		System.out.println("Lendo celula B8");
+		System.out.println("   valor=" + leitor.getValorCelulaString("B8"));
+		System.out.println();
+		
+		System.out.println("Lendo celula 3:8");
+		System.out.println("   valor=" + leitor.getValorCelulaString(3, 8));
+		System.out.println();
+		
 		// Le um valor usando coluna e linha
 		System.out.println("Lendo a célula coluna=6 linha=56");
 		System.out.println("   valor= " + leitor.getValorCelulaDouble(6,56));
+		System.out.println();
 		
 		// Le um valor usando letra e numero
 		System.out.println("Lendo a célula F56");
 		System.out.println("   valor= " + leitor.getValorCelulaDouble("F56"));
+		System.out.println();
 		
 		// Le uma coluna de valores
 		System.out.println("Lendo uma coluna F48:F58");
 		leitor.getValoresColunaDouble("F48:F58").forEach(s -> System.out.println("    " + s));
+		System.out.println();
 		
 		// Le uma coluna de valores
 		System.out.println("Lendo a coluna 6:48-6:58");
 		leitor.getValoresColunaDouble(6,48,58).forEach(s -> System.out.println("    " + s));
+		System.out.println();
 		
 		// Le uma linha de valores
 		System.out.println("Lendo a linha F48:M48");
 		leitor.getValoresLinhaDouble("F48:M48").forEach(s -> System.out.print("    " + s));
 		System.out.println();
+		System.out.println();
 		
 		// Le uma linha de valores		
 		System.out.println("Lendo a linha 6:48-13:48");
 		leitor.getValoresLinhaDouble(6,13,48).forEach(s -> System.out.print("    " + s));
+		System.out.println();
 		System.out.println();
 		
 		// Le uma matriz de valores
@@ -51,6 +66,7 @@ public class Main {
 				System.out.println();
 			}
 		}
+		System.out.println();
 		
 		// Le uma matriz de valores
 		{ 
@@ -63,6 +79,15 @@ public class Main {
 				System.out.println();
 			}
 		}
+		
+		// Lendo outra planilha
+		System.out.println("Abrindo planilha 1");
+		leitor.abrir(1);
+		
+		// Lendo Dados
+		System.out.println("Lendo titulo da planilha");
+		System.out.println("   " + leitor.getValorCelulaString("C1"));
+		
 		System.out.println();
 		System.out.println("FIM.");
 	}

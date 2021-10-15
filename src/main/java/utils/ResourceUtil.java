@@ -19,7 +19,7 @@ import java.net.URL;
  * mas quando exporta em JAR os arquivos ficarão na raiz do JAR e serão apenas leitura     <br> 
  * o programa consegue ler mas não consegue escrever se estiver dentro do JAR.             <br>
  * normalmente o arquivo a compilação como dentro do JAR.                                  <br>
- * O m�todo readResource() retorna o conteúdo do arquivo dentro da pasta resource.         <br>
+ * O método readResource() retorna o conteúdo do arquivo dentro da pasta resource.         <br>
  * See <a href="https://mkyong.com/java/java-read-a-file-from-resources-folder/"> teste    </a>
  * 
  * @author Rodrigo Eggea
@@ -58,9 +58,9 @@ public class ResourceUtil {
 	
 	/**
 	 * Escreve arquivo na pasta resources. <br> 
-	 * S� funciona durante a compila��o. N�o funciona depois de empacotado em um JAR. <br>
+	 * Só funciona durante a compilação. Não funciona depois de empacotado em um JAR. <br>
 	 * 
-	 * @param filename - Filename
+	 * @param  filename - Filename
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws URISyntaxException
@@ -68,15 +68,14 @@ public class ResourceUtil {
 	public static void writeFile(String filename, String conteudo) {
 		try { 
 			URL url = ResourceUtil.class.getResource("/" + filename);
-	    	File f = new File("resources/" + filename);
-	    	PrintWriter pw = new PrintWriter(f);
+	    	File file = new File("resources/" + filename);
+	    	PrintWriter pw = new PrintWriter(file);
 	    	pw.write(conteudo);
 	    	pw.close();
 		} catch (Exception e) {
 			// Vai dar erro se o programa estiver empacotado
 			// dentro de um JAR e tentar escrever o resource.
-			// Ignora o erro neste caso.
+			// Ignora não gera nenhum erro.
 		}
 	}
-	
 }

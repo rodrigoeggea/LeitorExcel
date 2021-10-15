@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,8 +23,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Classe auxiliar para leitura e escrita de arquivo Excel utilizando o Apache POI.
- * Utiliza sempre os parâmetros coluna e linha nessa sequeência, igual as fórmulas do excel.
- * Essa classe utiliza o INDEX das colunas e linhas iniciando em 1.
+ * Utiliza sempre os parâmetros coluna e linha nessa sequência igual as fórmulas do excel "AA:11".
+ * Essa classe utiliza o INDEX das colunas e linhas iniciando em 1, igual a planilha do Excel.
  *  
  * @author Rodrigo Eggea
  */
