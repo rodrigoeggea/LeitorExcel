@@ -18,7 +18,6 @@ public class MainResource {
 		System.out.println("INICIO DO PROGRAMA");
 		
 		System.out.println("LENDO ARQUIVO EXCEL: RDH_09OUT2021.xlsx");
-		 // PROCESSO DEMORADO (usar swingworker para carregar rápido de dentro do JAR)
 		InputStream is = ResourceUtil.readFile("RDH_09OUT2021.xlsx");
 		System.out.println("ARQUIVO CARREGADO!");
 		System.out.println("LENDO ARQUIVO COM APACHE POI");
