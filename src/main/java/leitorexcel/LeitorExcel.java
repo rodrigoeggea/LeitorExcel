@@ -49,7 +49,7 @@ public class LeitorExcel {
 		// Abre o arquivo
 		if     (extensao.equalsIgnoreCase("XLS"))  { this.workbook = WorkbookFactory.create(arquivo); 	}
 		else if(extensao.equalsIgnoreCase("XLSX")) { this.workbook = new XSSFWorkbook(arquivo);      }
-		else throw new RuntimeException("ERRO: Arquivo não possui extensão XLS nem XLSX.");
+		else throw new RuntimeException("ERRO: Arquivo deve ter extensão XLS ou XLSX.");
 	}
 	
 	private String getExtensionByStringHandling(String filename) {
