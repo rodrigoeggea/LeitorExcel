@@ -23,8 +23,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Classe auxiliar para leitura e escrita de arquivo Excel utilizando o Apache POI.
- * Utiliza sempre os parâmetros coluna e linha nessa sequência igual as fórmulas do excel "AA:11".
- * Essa classe utiliza o INDEX das colunas e linhas iniciando em 1, igual a planilha do Excel.
+ * Utiliza sempre os parâmetros coluna e linha nessa sequência igual as fórmulas do excel "A1:B2".
+ * Essa classe utiliza o INDEX das colunas e linhas iniciando em 1, igual as planilhas do Excel.
  *  
  * @author Rodrigo Eggea
  */
