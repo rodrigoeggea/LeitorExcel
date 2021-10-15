@@ -1,4 +1,4 @@
-package com.exemplo;
+package exemplo;
 
 
 import java.io.FileInputStream;

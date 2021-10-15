@@ -1,4 +1,4 @@
-package com.exemplo;
+package leitorexcel;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Rodrigo Eggea
  */
 public class LeitorExcel {
+	public static enum EXTENSAO {XLS,XLSX};
 	private Path caminhoArquivo;
 	private Sheet planilha;
 	private InputStream arquivo;
@@ -47,24 +48,27 @@ public class LeitorExcel {
 		this.arquivo = Files.newInputStream(caminhoArquivo, StandardOpenOption.READ);
 		
 		// Abre o arquivo
-		abrir();
-	}
-
-	private void abrir() throws EncryptedDocumentException, IOException {
 		if     (extensao.equalsIgnoreCase("XLS"))  { this.workbook = WorkbookFactory.create(arquivo); 	}
-		else if(extensao.equalsIgnoreCase("XLSX")) {	this.workbook = new XSSFWorkbook(arquivo);      }
+		else if(extensao.equalsIgnoreCase("XLSX")) { this.workbook = new XSSFWorkbook(arquivo);      }
 		else throw new RuntimeException("ERRO: Arquivo não possui extensão XLS nem XLSX.");
 	}
 	
 	private String getExtensionByStringHandling(String filename) {
 		return filename.substring(filename.lastIndexOf(".") + 1 );
 	}
+
+	public LeitorExcel(InputStream inputStream, EXTENSAO extensao) throws IOException {
+		this.arquivo = inputStream;
+		// Abre o arquivo
+		if(extensao.equals(EXTENSAO.XLS))  { this.workbook = WorkbookFactory.create(inputStream); }
+		if(extensao.equals(EXTENSAO.XLSX)) { this.workbook = new XSSFWorkbook(inputStream);       }
+	}
 	
 	public void gravar() throws Exception {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(caminhoArquivo.toFile());
 			this.workbook.write(fileOut);
-			fileOut.close();
+			fileOut.close(); 
 			this.fechar();
 		} catch (Exception e) {
 			throw new Exception("Não foi possível fechar a planilha! Erro: " + e.getMessage());
@@ -269,7 +273,7 @@ public class LeitorExcel {
 		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
 		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
 		if(colunaInicio != colunaFim) {
-			throw new RuntimeException("Coluna inicial e final deve ser a mesma.");
+			throw new RuntimeException("getValoresColunaDouble: Coluna inicial e final deve ser a mesma.");
 		}
 		return getValoresColunaDouble(colunaInicio, linhaInicio, linhaFim); 
 	}
@@ -413,27 +417,27 @@ public class LeitorExcel {
 	}
 	
 	/* ********************** GET DOUBLE RANGE ******************************/
-	public Double[][] getValorRangeDouble(int colunaInicio, int linhaInicio, int colunaFim, int linhaFim) throws Exception {
+	public Double[][] getValoresRangeDouble(int colunaInicio, int linhaInicio, int colunaFim, int linhaFim) throws Exception {
 		verificaLimitesIndex(colunaInicio, linhaInicio);
 		verificaLimitesIndex(colunaFim, linhaFim);
 
 		int numeroColunas = colunaFim - colunaInicio +1;
 		int numeroLinhas = linhaFim - linhaInicio +1;
-		Double[][] valores = new Double[numeroColunas][numeroLinhas];
+		Double[][] valores = new Double[numeroLinhas][numeroColunas];
 		for(int coluna=colunaInicio, i=0; coluna <= colunaFim; coluna++, i++) {
 			for(int linha=linhaInicio, j=0; linha <= linhaFim; linha++, j++) {
-				valores[i][j]=getValorCelulaDouble(coluna, linha);
+				valores[j][i]=getValorCelulaDouble(coluna, linha);
 			}
 		}
 		return valores;
 	}
 	
-	public Double[][] getValorRangeDouble(String celulaInicioFim) throws Exception {
+	public Double[][] getValoresRangeDouble(String celulaInicioFim) throws Exception {
 		int colunaInicio = CellRangeAddress.valueOf(celulaInicioFim).getFirstColumn()+1;
 		int linhaInicio  = CellRangeAddress.valueOf(celulaInicioFim).getFirstRow()+1;
 		int colunaFim    = CellRangeAddress.valueOf(celulaInicioFim).getLastColumn()+1;
 		int linhaFim     = CellRangeAddress.valueOf(celulaInicioFim).getLastRow()+1;
-		return getValorRangeDouble(colunaInicio, linhaInicio, colunaFim, linhaFim); 
+		return getValoresRangeDouble(colunaInicio, linhaInicio, colunaFim, linhaFim); 
 	}
 	
 	/* ******************** SET BOOLEAN ******************************/
