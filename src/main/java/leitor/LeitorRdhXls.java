@@ -39,10 +39,10 @@ public class LeitorRdhXls {
 		postosVazoes = new HashMap<>();
 		for (int linha = 8; linha <= 172; linha++) {
 			try {
-				Integer  numeroPosto      = leitor.getValorCelulaDouble("E" + linha).intValue();
-				String   nomeUsina        = leitor.getValorCelulaString("C" + linha);
-				Double   vazaoMesAnterior = leitor.getValorCelulaDouble("F" + linha);
-				Double   vazaoMesAtual    = leitor.getValorCelulaDouble("H" + linha);
+				Integer  numeroPosto      = leitor.getCelulaDouble("E" + linha).intValue();
+				String   nomeUsina        = leitor.getCelulaString("C" + linha);
+				Double   vazaoMesAnterior = leitor.getCelulaDouble("F" + linha);
+				Double   vazaoMesAtual    = leitor.getCelulaDouble("H" + linha);
 				VazaoRdh vazaoPosto       = new VazaoRdh(numeroPosto, nomeUsina, vazaoMesAnterior, vazaoMesAtual);
 				postosVazoes.put(numeroPosto, vazaoPosto);
 			} catch (Exception e) {
