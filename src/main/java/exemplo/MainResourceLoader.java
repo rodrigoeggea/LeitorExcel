@@ -9,6 +9,8 @@ import utils.ResourceLoader;
 
 /**
  * Exemplos de utilização da classe auxiliar LeitorExcel.
+ * Utiliza método "Resource Loader" para tenttar carregar arquivo
+ * dentro do resources mais rapidamente.
  * 
  * @author Rodrigo Eggea
  *
@@ -17,7 +19,8 @@ public class MainResourceLoader {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("INICIO DO PROGRAMA");
-		System.out.println("--- LENDO ARQUIVO COM RESOUCE LOUDER ---");
+		
+		System.out.println("--- LENDO ARQUIVO COM RESOURCE LOADER ---");
 		ResourceLoader rl = new ResourceLoader("RDH_09OUT2021.xlsx");
 		System.out.println("EXECUTANDO");
 		rl.execute();

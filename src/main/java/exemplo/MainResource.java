@@ -15,11 +15,12 @@ import utils.ResourceUtil;
 public class MainResource {
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("INICIO DO PROGRAMA");
-		
+		System.out.println("INICIO DO PROGRAMA");		
 		System.out.println("LENDO ARQUIVO EXCEL: RDH_09OUT2021.xlsx");
+		
 		InputStream is = ResourceUtil.readFile("RDH_09OUT2021.xlsx");
 		System.out.println("ARQUIVO CARREGADO!");
+		
 		System.out.println("LENDO ARQUIVO COM APACHE POI");
 		LeitorExcel leitor = new LeitorExcel(is, EXTENSAO.XLSX);  // DENTRO DO JAR A LEITURA É LENTA.
 		leitor.abrir(0);
