@@ -11,7 +11,7 @@ import leitorexcel.LeitorExcel;
 import leitorexcel.LeitorExcel.EXTENSAO;
 import utils.ResourceUtil;
 
-class TestaLeitorXls {
+class JunitTestaLeitorXls {
 	private static InputStream is;
 	private static LeitorExcel leitor;
 	
@@ -24,21 +24,21 @@ class TestaLeitorXls {
 	
 	@Test
 	void test1() throws Exception {
-		assertEquals(34.0, leitor.getValorCelulaDouble("F8"));
-		assertEquals(34.0, leitor.getValorCelulaDouble(6,8));
+		assertEquals(34.0, leitor.getCelulaDouble("F8"));
+		assertEquals(34.0, leitor.getCelulaDouble(6,8));
 		
-		assertEquals(0.27, leitor.getValorCelulaDouble("Z8"));
-		assertEquals(0.27, leitor.getValorCelulaDouble(26,8));
+		assertEquals(0.27, leitor.getCelulaDouble("Z8"));
+		assertEquals(0.27, leitor.getCelulaDouble(26,8));
 		
-		assertEquals(561.62, leitor.getValorCelulaDouble("O59"));
-		assertEquals(561.62, leitor.getValorCelulaDouble(15,59));
+		assertEquals(561.62, leitor.getCelulaDouble("O59"));
+		assertEquals(561.62, leitor.getCelulaDouble(15,59));
 	}
 	
 	@Test
 	void test2() throws Exception {
 		Double[] valoresTeste = {161.0, 164.0, 237.0, 238.0};
-		assertEquals(Arrays.asList(valoresTeste), leitor.getValoresColunaDouble(5, 48, 51));
-		assertEquals(Arrays.asList(valoresTeste), leitor.getValoresColunaDouble("E48:E51"));
+		assertEquals(Arrays.asList(valoresTeste), leitor.getColunaDouble(5, 48, 51));
+		assertEquals(Arrays.asList(valoresTeste), leitor.getColunaDouble("E48:E51"));
 	}
 	
 	@Test
@@ -49,15 +49,8 @@ class TestaLeitorXls {
 			{133.0, 52.0, 151.0},
 			{155.0, 54.0, 169.0}};
 
-			Double[][] result = leitor.getValoresRangeDouble("F48:H51");
+			Double[][] result = leitor.getRangeDouble("F48:H51");
 		
-//		for(Double[] linhas: result) {
-//			for(Double celula: linhas) {
-//				System.out.print(celula + "\t");
-//			}
-//			System.out.println();
-//		}
-			
 		for(int i=0; i<4; i++) {
 			for(int j=0; j<3; j++) {
 				assertEquals(valoresTeste[i][j], result[i][j]);
@@ -74,7 +67,7 @@ class TestaLeitorXls {
 			{133.0, 52.0, 151.0},
 			{155.0, 54.0, 169.0}};
 
-			Double[][] result = leitor.getValoresRangeDouble(6,48, 8, 51);
+			Double[][] result = leitor.getRangeDouble(6,48, 8, 51);
 		
 		for(int i=0; i<4; i++) {
 			for(int j=0; j<3; j++) {

@@ -1,8 +1,6 @@
 package exemplo;
 
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import leitor.LeitorRdhXls;
 import leitorexcel.LeitorExcel.EXTENSAO;
